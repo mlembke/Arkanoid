@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "GameState.h"
+#include "SpriteRenderer.h"
 
 /**
 * \file Game.h
@@ -30,7 +31,7 @@ public:
 	GLuint width_;
 	GLuint height_;
 	// Sprite renderer
-	// std::unique_ptr<SpriteRenderer> renderer_;
+	 std::unique_ptr<SpriteRenderer> renderer_;
 
 private:
 	Game() : state_(GAME_MENU), width_(0), height_(0) {}
