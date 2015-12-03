@@ -7,13 +7,9 @@
 #include "SpriteRenderer.h"
 
 /**
-* \file Game.h
-* \brief Header file of Game class.
-*/
-/**
-* Game
-* Class representing Game instance. Based on Meyer's singleton pattern.
-*/
+ * Game
+ * Class representing Game instance. Based on Meyer's singleton pattern.
+ */
 
 class Game
 {

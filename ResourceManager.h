@@ -9,10 +9,6 @@
 #include "Shader.h"
 
 /**
- * \file ResourceManger.h
- * \brief Header file of ResourceManager class.
- */
-/**
  * Resource Manager
  * Class defines Resource Manager. Resource Manager manages shaders and textures including data storage and loading.
  * Based on Meyer's singleton pattern.

@@ -6,10 +6,6 @@
 #include "Shader.h"
 
 /**
-* \file ResourceManger.h
-* \brief Header file of SpriteRenderer class.
-*/
-/**
 * SpriteRenderer
 * Class defines Sprite Renderer used for drawing sprites.
 */

@@ -4,6 +4,10 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+/**
+ * Shader
+ * Represents class managing vertex, fragment and geometry shaders.
+ */
 class Shader
 {
 public:

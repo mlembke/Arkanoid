@@ -2,7 +2,10 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-
+/**
+ * GameState
+ * Represents two dimensional texture.
+ */
 class Texture2D
 {
 public:

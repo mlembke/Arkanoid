@@ -1,8 +1,5 @@
 #pragma once
-/**
- * \file GameState.h
- * \brief Header file contains GameState enum.
- */
+
 /**
  * GameState
  * Represents the current state of the game.
