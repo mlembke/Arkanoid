@@ -23,9 +23,9 @@ void Game::init(GLuint width, GLuint height)
 	ResourceManager::getInstance().getShader("sprite").use().setInteger("image", 0);
 	ResourceManager::getInstance().getShader("sprite").setMatrix4("projection", projection);
 	// Load textures
-	ResourceManager::getInstance().loadTexture("Resources/Textures/awesomeface.png", GL_TRUE, "face");
+	ResourceManager::getInstance().loadTexture("Resources/Textures/wykopfejs.png", GL_TRUE, "face");
 	// Set render-specific controls
-	renderer_ = std::make_unique<SpriteRenderer>(ResourceManager::getInstance().getShader("spirite"));
+	renderer_ = std::make_unique<SpriteRenderer>(ResourceManager::getInstance().getShader("sprite"));
 
 }
 

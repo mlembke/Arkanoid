@@ -108,10 +108,8 @@ Texture2D ResourceManager::loadTextureFromFile(const GLchar* file, GLboolean alp
 	// Load image
 	int width;
 	int height;
-	auto forceChannels = texture.imageFormat_ == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB;
-	unsigned char* image = SOIL_load_image(file, &width, &height, nullptr, forceChannels);
+	unsigned char* image = SOIL_load_image(file, &width, &height, nullptr, texture.imageFormat_ == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
 
-	std::cout << "forceChannels = " << forceChannels << "\n";
 	// Now generate texture
 	texture.generate(width, height, image);
 	// And finally free image data
