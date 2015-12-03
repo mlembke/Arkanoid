@@ -1,2 +1,3 @@
-Arkanoid
-Simple Arkanoid game clone in C++ using OpenGL 3.1
+Simple Arkanoid game clone in C++14 using OpenGL 3.1 with GLFW3, GLEW, GLM and SOIL.
+
+Platforms: Windows 7, 8, 8.1, 10
