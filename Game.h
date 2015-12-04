@@ -42,6 +42,7 @@ private:
 	Game& operator=(const Game&) = delete;
 
 	GLboolean checkCollision(GameObject& first, GameObject& second);
+	GLboolean checkCollision(Ball& ball, GameObject& other);
 	void doCollisions();
 };
 

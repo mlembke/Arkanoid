@@ -118,6 +118,20 @@ GLboolean Game::checkCollision(GameObject& first, GameObject& second)
 	return collisionX && collisionY;
 }
 
+GLboolean Game::checkCollision(Ball& ball, GameObject& other)
+{
+	glm::vec2 center(ball.position_ + ball.radius_);
+	glm::vec2 aabb_half_extents(other.size_.x / 2, other.size_.y / 2);
+	glm::vec2 aabb_center(other.position_.x + aabb_half_extents.x, other.position_.y + aabb_half_extents.y);
+
+	auto difference = center - aabb_center;
+	auto clamped = glm::clamp(difference, -aabb_half_extents, aabb_half_extents);
+
+	auto closest = aabb_center + clamped;
+	difference = closest - center;
+	return glm::length(difference) < ball.radius_;
+}
+
 void Game::doCollisions()
 {
 	for (auto& box : levels_[currentLevel_].bricks)
