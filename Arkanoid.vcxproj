@@ -169,10 +169,18 @@
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Levels\level1.data" />
+    <None Include="Resources\Levels\level2.data" />
+    <None Include="Resources\Levels\level3.data" />
+    <None Include="Resources\Levels\level4.data" />
     <None Include="Resources\Shaders\sprite.frag" />
     <None Include="Resources\Shaders\sprite.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\Textures\background.jpg" />
+    <Image Include="Resources\Textures\ball.png" />
+    <Image Include="Resources\Textures\block.png" />
+    <Image Include="Resources\Textures\block_solid.png" />
     <Image Include="Resources\Textures\wykopfejs.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

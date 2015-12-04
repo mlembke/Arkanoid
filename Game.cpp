@@ -23,7 +23,20 @@ void Game::init(GLuint width, GLuint height)
 	ResourceManager::getInstance().getShader("sprite").use().setInteger("image", 0);
 	ResourceManager::getInstance().getShader("sprite").setMatrix4("projection", projection);
 	// Load textures
-	ResourceManager::getInstance().loadTexture("Resources/Textures/wykopfejs.png", GL_TRUE, "face");
+	ResourceManager::getInstance().loadTexture("Resources/Textures/background.jpg", GL_FALSE, "background");
+	ResourceManager::getInstance().loadTexture("Resources/Textures/ball.png", GL_FALSE, "ball");
+	ResourceManager::getInstance().loadTexture("Resources/Textures/block.png", GL_FALSE, "block");
+	ResourceManager::getInstance().loadTexture("Resources/Textures/block_solid.png", GL_FALSE, "block_solid");
+	// Load game levels
+	for (auto i = 0; i < 4; i++)
+	{
+		GameLevel level;
+		std::string file = "Resources/Levels/level" + std::to_string(i) + ".data";
+		level.load(static_cast<const GLchar*>(file.c_str()), width_, 0.5 * height_);
+		levels_.push_back(level);
+	}
+	if (levels_.size() > 0)
+		currentLevel_ = 1;
 	// Set render-specific controls
 	renderer_ = std::make_unique<SpriteRenderer>(ResourceManager::getInstance().getShader("sprite"));
 
@@ -39,5 +52,10 @@ void Game::update(GLfloat dt)
 
 void Game::render()
 {
-	renderer_->drawSprite(ResourceManager::getInstance().getTexture("face"), glm::vec2(200, 200), glm::vec2(300, 400), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (state_ == GAME_ACTIVE) {
+		renderer_->drawSprite(ResourceManager::getInstance().getTexture("background"),
+			glm::vec2(0, 0), glm::vec2(width_, height_), 0.0f
+			);
+		this->levels_[this->currentLevel_].draw(*renderer_);
+	}
 }

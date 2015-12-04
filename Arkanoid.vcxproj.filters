@@ -19,6 +19,9 @@
     <Filter Include="Resources\Textures">
       <UniqueIdentifier>{0d54563c-dda5-4711-adac-24fdc11334b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Levels">
+      <UniqueIdentifier>{4660fd26-744d-408b-a24b-a64367904f3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -79,9 +82,33 @@
     <None Include="Resources\Shaders\sprite.vs">
       <Filter>Resources\Shaders</Filter>
     </None>
+    <None Include="Resources\Levels\level1.data">
+      <Filter>Resources\Levels</Filter>
+    </None>
+    <None Include="Resources\Levels\level2.data">
+      <Filter>Resources\Levels</Filter>
+    </None>
+    <None Include="Resources\Levels\level3.data">
+      <Filter>Resources\Levels</Filter>
+    </None>
+    <None Include="Resources\Levels\level4.data">
+      <Filter>Resources\Levels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\wykopfejs.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="Resources\Textures\block.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="Resources\Textures\block_solid.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="Resources\Textures\background.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="Resources\Textures\ball.png">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>
