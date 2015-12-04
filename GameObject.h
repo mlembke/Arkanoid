@@ -17,7 +17,7 @@ public:
 	virtual ~GameObject();
 
 	virtual void draw(SpriteRenderer& renderer);
-private:
+
 	glm::vec2 position_;
 	glm::vec2 size_;
 	glm::vec2 velocity_;
