@@ -33,9 +33,10 @@ public:
 
 	std::vector<GameLevel> levels_;
 	GLuint currentLevel_;
+	std::unique_ptr<GameObject> player_;
 
 private:
-	Game() : state_(GAME_MENU), width_(0), height_(0) {}
+	Game() : state_(GAME_MENU), width_(0), height_(0), currentLevel_(0) {}
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
 
