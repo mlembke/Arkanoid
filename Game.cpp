@@ -40,10 +40,11 @@ void Game::init(GLuint width, GLuint height)
 		currentLevel_ = 1;
 	// Set player
 	glm::vec2 playerSize(200.0f, 20.0f);
-	glm::vec2 playerVelocity(500.0f);
+	glm::vec2 playerVelocity(500.0f, 0.0f);
 	glm::vec2 playerPosition(static_cast<GLfloat>(width_) / 2 - playerSize.x / 2,
 		static_cast<GLfloat>(height_) - playerSize.y);
 	player_ = std::make_unique<GameObject>(playerPosition, playerSize, ResourceManager::getInstance().getTexture("paddle"));
+	player_->velocity_ = playerVelocity;
 	// Set render-specific controls
 	renderer_ = std::make_unique<SpriteRenderer>(ResourceManager::getInstance().getShader("sprite"));
 
@@ -51,6 +52,19 @@ void Game::init(GLuint width, GLuint height)
 
 void Game::processInput(GLfloat dt)
 {
+	if (state_ == GAME_ACTIVE) {
+		GLfloat ds = player_->velocity_.x * dt;
+		if (keys_[GLFW_KEY_LEFT])
+		{
+			if (player_->position_.x >= 0.0f)
+				player_->position_.x -= ds;
+		}
+		if (keys_[GLFW_KEY_RIGHT])
+		{
+			if (player_->position_.x <= width_ - player_->size_.x - 1)
+				player_->position_.x += ds;
+		}
+	}
 }
 
 void Game::update(GLfloat dt)

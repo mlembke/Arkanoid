@@ -13,13 +13,11 @@ ResourceManager& ResourceManager::getInstance()
 
 void ResourceManager::init()
 {
-	OutputDebugStringW(L"ResourceManager::init()\n");
 	getInstance();
 }
 
 void ResourceManager::clear()
 {
-	OutputDebugStringW(L"ResourceManager::clear()\n");
 	for (auto& var : shaders_)
 		glDeleteProgram(var.second.id_);
 
@@ -29,7 +27,6 @@ void ResourceManager::clear()
 
 Shader& ResourceManager::loadShader(const GLchar* vShaderFile, const GLchar* fShaderFile, const GLchar* gShaderFile, std::string name)
 {
-	OutputDebugStringW(L"ResourceManager::loadShader()\n");
 	shaders_[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
 	return shaders_[name];
 }
@@ -52,7 +49,6 @@ Texture2D& ResourceManager::getTexture(std::string name)
 
 Shader ResourceManager::loadShaderFromFile(const GLchar* vShaderFile, const GLchar* fShaderFile, const GLchar* gShaderFile)
 {
-	OutputDebugStringW(L"ResourceManager::loadDataFromFile()\n");
 	// 1. Retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
 	std::string fragmentCode;
@@ -97,7 +93,6 @@ Shader ResourceManager::loadShaderFromFile(const GLchar* vShaderFile, const GLch
 
 Texture2D ResourceManager::loadTextureFromFile(const GLchar* file, GLboolean alpha)
 {
-	OutputDebugStringW(L"ResourceManager::loadTextureFromFile()\n");
 	// Create Texture object
 	Texture2D texture;
 	if (alpha)

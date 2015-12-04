@@ -1,16 +1,13 @@
-#include <windows.h>
 #include "Texture2D.h"
 
 Texture2D::Texture2D() : width_(0), height_(0), internalFormat_(GL_RGB), imageFormat_(GL_RGB), wrapSAxis_(GL_REPEAT), wrapTAxis_(GL_REPEAT), filterMin_(GL_LINEAR), filterMax_(GL_LINEAR)
 {
-	OutputDebugStringW(L"Texture2D::Texture2D()\n");
 	glGenTextures(1, &id_);
 }
 
 
 void Texture2D::generate(GLuint width, GLuint height, unsigned char* data)
 {
-	OutputDebugStringW(L"Texture2D::generate()\n");
 	width_ = width;
 	height_ = height;
 

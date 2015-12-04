@@ -1,4 +1,3 @@
-#include <windows.h>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
@@ -8,14 +7,12 @@ Shader& Shader::use()
 	// Sets the this object as the current active shader
 	// program to use for subsequent drawing commands.
 	// If id equals 0, OpenGL will resort to its old drawing patterns.
-	OutputDebugStringW(L"Shader::use()\n");
 	glUseProgram(id_);
 	return *this;
 }
 
 void Shader::compile(const GLchar* vertexSource, const GLchar* fragmentSource, const GLchar* geometrySource)
 {
-	OutputDebugStringW(L"Shader::compile()\n");
 	// Vertex Shader
 	GLuint sVertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(sVertex, 1, &vertexSource, nullptr);

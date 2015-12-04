@@ -1,6 +1,5 @@
 #pragma once
 #define GLEW_STATIC
-#include <windows.h>
 #include <unordered_map>
 #include <string>
 #include <GL/glew.h>

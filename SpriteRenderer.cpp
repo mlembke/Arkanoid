@@ -1,10 +1,8 @@
-#include <windows.h>
 #include "SpriteRenderer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 SpriteRenderer::SpriteRenderer(const Shader& shader) : shader_(shader)
 {
-	OutputDebugStringW(L"SpiriteRenderer::SpiriteRenderer() -> default constructor\n");
 	init();
 }
 
@@ -16,7 +14,6 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::drawSprite(Texture2D& texture, glm::vec2 position, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
-	OutputDebugStringW(L"SpiriteRenderer::drawSpirite()\n");
 	shader_.use();
 	glm::mat4 model;
 	model = glm::translate(model, glm::vec3(position, 0.0f));  // First translate (transformations are: scale happens first, then rotation and then finall translation happens; reversed order)
@@ -42,7 +39,6 @@ void SpriteRenderer::drawSprite(Texture2D& texture, glm::vec2 position, glm::vec
 
 void SpriteRenderer::init()
 {
-	OutputDebugStringW(L"SpiriteRenderer::init()\n");
 	// Configure VAO/VBO
 	GLuint VBO;
 	GLfloat vertices[] = {
