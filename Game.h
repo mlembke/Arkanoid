@@ -4,6 +4,7 @@
 #include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Ball.h"
 #include "GameState.h"
 #include "GameLevel.h"
 #include "SpriteRenderer.h"
@@ -34,12 +35,13 @@ public:
 	std::vector<GameLevel> levels_;
 	GLuint currentLevel_;
 	std::unique_ptr<GameObject> player_;
-
+	std::vector<std::unique_ptr<Ball>> balls_;
 private:
 	Game() : state_(GAME_MENU), width_(0), height_(0), currentLevel_(0) {}
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
 
-
+	GLboolean checkCollision(GameObject& first, GameObject& second);
+	void doCollisions();
 };
 

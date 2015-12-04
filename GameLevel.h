@@ -21,9 +21,11 @@ public:
 	void load(const GLchar* file, GLuint levelWidth, GLuint levelHeight);
 	void draw(SpriteRenderer& renderer);
 	GLboolean isCompleted();
+
+	std::vector<GameObject> bricks;
 private:
 	void init(std::vector<std::vector<GLuint>> tileData, GLuint levelWidth, GLuint levelHeight);
 
-	std::vector<GameObject> bricks;
+
 };
 
