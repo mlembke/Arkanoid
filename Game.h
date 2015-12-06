@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Ball.h"
+#include "Direction.h"
 #include "GameState.h"
 #include "GameLevel.h"
 #include "SpriteRenderer.h"
@@ -16,6 +17,7 @@
 
 class Game
 {
+	typedef std::tuple<GLboolean, Direction, glm::vec2> Collision;
 public:
 	~Game() = default;
 
@@ -36,13 +38,17 @@ public:
 	GLuint currentLevel_;
 	std::unique_ptr<GameObject> player_;
 	std::vector<std::unique_ptr<Ball>> balls_;
+
 private:
 	Game() : state_(GAME_MENU), width_(0), height_(0), currentLevel_(0) {}
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
 
+	void resetLevel();
+	void resetPlayer();
+	Direction vectorDirection(glm::vec2 target);
 	GLboolean checkCollision(GameObject& first, GameObject& second);
-	GLboolean checkCollision(Ball& ball, GameObject& other);
+	Collision checkCollision(Ball& ball, GameObject& other);
 	void doCollisions();
 };
 

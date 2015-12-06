@@ -3,6 +3,10 @@
 #include "SpriteRenderer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
+const glm::vec2 INITIAL_BALL_VELOCITY(100.f, -350.0f);
+const glm::vec2 INITIAL_PLAYER_SIZE(100.0f, 20.0f);
+const glm::vec2 INITIAL_PLAYER_VELOCITY(500.0f, 0.0f);
+
 Game& Game::getInstance()
 {
 	static Game instance;
@@ -29,26 +33,24 @@ void Game::init(GLuint width, GLuint height)
 	ResourceManager::getInstance().loadTexture("Resources/Textures/block_solid.png", GL_FALSE, "block_solid");
 	ResourceManager::getInstance().loadTexture("Resources/Textures/paddle.png", GL_TRUE, "paddle");
 	// Load game levels
-	for (auto i = 0; i < 4; i++)
+	for (auto i = 0; i < 4; ++i)
 	{
 		GameLevel level;
-		std::string file = "Resources/Levels/level" + std::to_string(i) + ".data";
+		std::string file = "Resources/Levels/level" + std::to_string(i + 1) + ".data";
 		level.load(static_cast<const GLchar*>(file.c_str()), width_, static_cast<GLuint>(round(0.5 * height_)));
 		levels_.push_back(level);
 	}
 	if (levels_.size() > 0)
-		currentLevel_ = 1;
+		currentLevel_ = 0;
 	// Set player
-	glm::vec2 playerSize(100.0f, 20.0f);
-	glm::vec2 playerVelocity(500.0f, 0.0f);
-	glm::vec2 playerPosition(static_cast<GLfloat>(width_) / 2 - playerSize.x / 2,
-		static_cast<GLfloat>(height_) - playerSize.y);
-	player_ = std::make_unique<GameObject>(playerPosition, playerSize, ResourceManager::getInstance().getTexture("paddle"));
-	player_->velocity_ = playerVelocity;
-	glm::vec2 initialBallVelocity(100.f, -350.0f);
+	const glm::vec2 initialPlayerPosition(static_cast<GLfloat>(width_) / 2 - INITIAL_PLAYER_SIZE.x / 2,
+		static_cast<GLfloat>(height_) - INITIAL_PLAYER_SIZE.y);
+	player_ = std::make_unique<GameObject>(initialPlayerPosition, INITIAL_PLAYER_SIZE, ResourceManager::getInstance().getTexture("paddle"));
+	player_->velocity_ = INITIAL_PLAYER_VELOCITY;
+
 	GLfloat ballRadius = 12.0f;
-	glm::vec2 ballPosition = playerPosition + glm::vec2(playerSize.x / 2 - ballRadius, -2 * ballRadius);
-	balls_.push_back(std::move(std::make_unique<Ball>(ballPosition, ballRadius, initialBallVelocity, ResourceManager::getInstance().getTexture("ball"))));
+	glm::vec2 ballPosition = initialPlayerPosition + glm::vec2(INITIAL_PLAYER_SIZE.x / 2 - ballRadius, -2 * ballRadius);
+	balls_.push_back(std::move(std::make_unique<Ball>(ballPosition, ballRadius, INITIAL_BALL_VELOCITY, ResourceManager::getInstance().getTexture("ball"))));
 
 	// Set render-specific controls
 	renderer_ = std::make_unique<SpriteRenderer>(ResourceManager::getInstance().getShader("sprite"));
@@ -91,7 +93,13 @@ void Game::update(GLfloat dt)
 	for (auto& ball : balls_)
 	{
 		ball->move(dt, width_);
-		doCollisions();
+
+	}
+	doCollisions();
+	if (balls_[0]->position_.y >= height_)
+	{
+		resetLevel();
+		resetPlayer();
 	}
 }
 
@@ -107,6 +115,47 @@ void Game::render()
 	}
 }
 
+void Game::resetLevel()
+{
+	std::string file = "Resources/Levels/level" + std::to_string(currentLevel_ + 1) + ".data";
+	levels_[currentLevel_].load(static_cast<const GLchar*>(file.c_str()), width_, static_cast<GLuint>(round(0.5 * height_)));
+}
+
+void Game::resetPlayer()
+{
+	player_->size_ = INITIAL_PLAYER_SIZE;
+	auto initialPlayerPosition = glm::vec2(static_cast<GLfloat>(width_) / 2 - INITIAL_PLAYER_SIZE.x / 2,
+		static_cast<GLfloat>(height_) - INITIAL_PLAYER_SIZE.y);
+	player_->position_ = initialPlayerPosition;
+	player_->velocity_ = INITIAL_PLAYER_VELOCITY;
+
+	balls_.erase(balls_.begin() + 1, balls_.end());
+	balls_[0]->reset(initialPlayerPosition + glm::vec2(INITIAL_PLAYER_SIZE.x / 2 - balls_[0]->radius_, -2 * balls_[0]->radius_), INITIAL_BALL_VELOCITY);
+
+}
+
+Direction Game::vectorDirection(glm::vec2 target)
+{
+	glm::vec2 compass[] = {
+		glm::vec2(0.0f, 1.0f),	// up
+		glm::vec2(1.0f, 0.0f),	// right
+		glm::vec2(0.0f, -1.0f),	// down
+		glm::vec2(-1.0f, 0.0f)	// left
+	};
+	GLfloat max = 0.0f;
+	GLuint bestMatch = -1;
+	for (GLuint i = 0; i < 4; i++)
+	{
+		GLfloat dotProduct = glm::dot(glm::normalize(target), compass[i]);
+		if (dotProduct > max)
+		{
+			max = dotProduct;
+			bestMatch = i;
+		}
+	}
+	return static_cast<Direction>(bestMatch);
+}
+
 GLboolean Game::checkCollision(GameObject& first, GameObject& second)
 {
 	bool collisionX = first.position_.x + first.size_.x >= second.position_.x &&
@@ -118,7 +167,7 @@ GLboolean Game::checkCollision(GameObject& first, GameObject& second)
 	return collisionX && collisionY;
 }
 
-GLboolean Game::checkCollision(Ball& ball, GameObject& other)
+Game::Collision Game::checkCollision(Ball& ball, GameObject& other)
 {
 	glm::vec2 center(ball.position_ + ball.radius_);
 	glm::vec2 aabb_half_extents(other.size_.x / 2, other.size_.y / 2);
@@ -129,13 +178,56 @@ GLboolean Game::checkCollision(Ball& ball, GameObject& other)
 
 	auto closest = aabb_center + clamped;
 	difference = closest - center;
-	return glm::length(difference) < ball.radius_;
+	if (glm::length(difference) < ball.radius_)
+		return std::make_tuple(GL_TRUE, vectorDirection(difference), difference);
+	return std::make_tuple(GL_FALSE, UP, glm::vec2(0, 0));
 }
 
 void Game::doCollisions()
 {
-	for (auto& box : levels_[currentLevel_].bricks)
-		for (auto& ball : balls_)
-			if (!box.destroyed_ && !box.isSolid_ && checkCollision(*ball, box))
-				box.destroyed_ = GL_TRUE;
+	for (auto& ball : balls_) {
+		for (auto& box : levels_[currentLevel_].bricks) {
+			if (!box.destroyed_) {
+				auto collision = checkCollision(*ball, box);
+				if (std::get<0>(collision))
+				{
+					if (!box.isSolid_)
+						box.destroyed_ = GL_TRUE;
+					auto collisionDirection = std::get<1>(collision);
+					auto differenceVector = std::get<2>(collision);
+					if (collisionDirection == LEFT || collisionDirection == RIGHT)
+					{
+						ball->velocity_.x = -ball->velocity_.x;
+						GLfloat penetration = ball->radius_ - std::abs(differenceVector.x);
+						if (collisionDirection == LEFT)
+							ball->position_.x += penetration;
+						else
+							ball->position_.x -= penetration;
+					}
+					else
+					{
+						ball->velocity_.y = -ball->velocity_.y;
+						GLfloat penetration = ball->radius_ - std::abs(differenceVector.y);
+						if (collisionDirection == UP)
+							ball->position_.y -= penetration;
+						else
+							ball->position_.y += penetration;
+					}
+				}
+			}
+		}
+		Collision result = checkCollision(*ball, *player_);
+		if (!ball->isStuck_ && std::get<0>(result))
+		{
+			GLfloat centerBoard = player_->position_.x + player_->size_.x / 2;
+			GLfloat distance = ball->position_.x + ball->radius_ - centerBoard;
+			GLfloat percentageDistance = distance / (player_->size_.x / 2);
+
+			GLfloat strength = 2.0f;
+			glm::vec2 oldVelocity = ball->velocity_;
+			ball->velocity_.x = INITIAL_BALL_VELOCITY.x * percentageDistance * strength;
+			ball->velocity_.y = -abs(ball->velocity_.y);
+			ball->velocity_ = glm::normalize(ball->velocity_) * glm::length(oldVelocity);
+		}
+	}
 }
